@@ -1,0 +1,6 @@
+User Registration : Post :{Server}/web/user_reg :name,email,phone,password,image :{
+    "status": true,
+    "msg": "User Saved",
+    "data": { },
+    "error": null
+}
