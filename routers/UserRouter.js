@@ -4,6 +4,7 @@ const {User,Message} = require('../models/index')
 const ApiResponse = require('../utils/ApiResponse')
 const { Op } = require("sequelize");
 
+//oldPassword,newPassword
 router.put("/chg_pass",async(request,response)=>{
     const userId = request.user.userid
     const user = await User.findOne({where:{id:userId}})
@@ -23,7 +24,7 @@ router.put("/chg_pass",async(request,response)=>{
         response.status(500).json(new ApiResponse(false, "Wrong Old Password !", null,null))
     }
  })
-
+//name,phone
 router.put("/profile_update",async(request,response)=>{
     const reqData = request.body
     const {name,phone} = reqData
@@ -60,22 +61,24 @@ router.post("/msg",async(request,response)=>{
 
 })
 router.get("/msg/:id",async(request,response)=>{
-    const id = request.params.id
+    const r_id = request.params.id
+    const s_id = request.user.userid
     try
     {
         const msg_list = await Message.findAll({
-            where:{},
+            where:{[Op.and]: [{sender: s_id},{receiver: r_id }] },
             attributes:{
                 exclude:["createdAt","updatedAt"]
             }
         });
-        response.status(200).json(new ApiResponse(true,"Message List!",user_list,null))
+        response.status(200).json(new ApiResponse(true,"Message List!",msg_list,null))
     }
     catch(err)
     {
         response.status(500).json(new ApiResponse(false,"Message List Not Found !",null,err.message))
     }
 })
+
 router.get("/users",async(request,response)=>{
     try
     {
@@ -89,7 +92,7 @@ router.get("/users",async(request,response)=>{
     }
     catch(err)
     {
-        response.status(500).json(new ApiResponse(false,"users List Not Found !",null,err.message))
+        response.status(500).json(new ApiResponse(false,"Users List Not Found !",null,err.message))
     }
 })
 module.exports = router
