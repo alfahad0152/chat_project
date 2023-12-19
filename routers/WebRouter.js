@@ -12,7 +12,7 @@ router.post("/user_reg", async (request, response) => {
         response.status(200).json(new ApiResponse(true, "User Saved", user, null))
     }
     catch (err) {
-        response.status(200).json(new ApiResponse(false, "User Not Saved", null, err.message))
+        response.status(500).json(new ApiResponse(false, "User Not Saved", null, err.message))
     }
 })
 //email,password
@@ -27,7 +27,7 @@ router.post("/login",async(request,response) =>{
             response.status(500).json(new ApiResponse(false,"Invalid User!"))
         }
         else {
-            const token = jwt.sign({userid:user.id},process.env.TOKEN_SECRET,{expiresIn:"3m"})
+            const token = jwt.sign({userid:user.id},process.env.TOKEN_SECRET,{expiresIn:"30m"})
             response.status(200).json(new ApiResponse(true, "Login Successfull !", {token}, null))
         }
     }
