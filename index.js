@@ -1,12 +1,14 @@
 const express = require('express')
 const dotenv = require('dotenv')
-const server = express()
 const webRouter = require('./routers/WebRouter')
 const authRouter = require('./routers/AuthRouter')
+const fileUpload = require('express-fileupload')
 
 dotenv.config();
-
+const server = express()
+server.use(express.urlencoded())
 server.use(express.json())
+server.use(fileUpload())
 
 server.get("/",(request,response)=>{
     response.send("Hello")
